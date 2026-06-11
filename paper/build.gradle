@@ -39,6 +39,11 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
+// 声明对core:jar的依赖
+tasks.named('jar') {
+    dependsOn ':core:jar'
+}
+
 // 配置jar
 jar {
     archiveBaseName.set('BraveSurvival-Paper')
