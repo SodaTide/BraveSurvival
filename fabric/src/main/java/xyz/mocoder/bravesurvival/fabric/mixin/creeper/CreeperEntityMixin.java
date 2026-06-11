@@ -24,6 +24,23 @@ public abstract class CreeperEntityMixin {
     private int explosionRadius;
     
     /**
+     * 注入苦力怕初始化方法
+     * 设置瞬间爆炸
+     */
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void setInstantFuse(CallbackInfo ci) {
+        if (ConfigManager.getMobConfig("creeper").has("instant_fuse") && 
+            ConfigManager.getMobConfig("creeper").get("instant_fuse").getAsBoolean()) {
+            this.fuseTime = 1;
+        }
+        
+        // 设置爆炸半径
+        if (ConfigManager.getMobConfig("creeper").has("explosion_radius")) {
+            this.explosionRadius = ConfigManager.getMobConfig("creeper").get("explosion_radius").getAsInt();
+        }
+    }
+    
+    /**
      * 注入苦力怕tick方法
      * 设置苦力怕隐形
      */
@@ -33,18 +50,6 @@ public abstract class CreeperEntityMixin {
             ConfigManager.getMobConfig("creeper").get("invisible").getAsBoolean()) {
             CreeperEntity creeper = (CreeperEntity) (Object) this;
             creeper.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 0, false, false));
-        }
-    }
-    
-    /**
-     * 注入苦力怕爆炸方法
-     * 设置瞬间爆炸
-     */
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void setInstantFuse(CallbackInfo ci) {
-        if (ConfigManager.getMobConfig("creeper").has("instant_fuse") && 
-            ConfigManager.getMobConfig("creeper").get("instant_fuse").getAsBoolean()) {
-            this.fuseTime = 1;
         }
     }
 }
