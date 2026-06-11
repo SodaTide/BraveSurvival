@@ -34,6 +34,10 @@ import java.util.Random;
 public class BraveSurvivalPlugin extends JavaPlugin implements Listener {
     
     private final Random random = new Random();
+    private ConfigManager configManager;
+    private RecipeManager recipeManager;
+    private VillagerTradeManager villagerTradeManager;
+    private EntityBehaviorManager entityBehaviorManager;
     
     @Override
     public void onEnable() {
@@ -41,9 +45,22 @@ public class BraveSurvivalPlugin extends JavaPlugin implements Listener {
         
         // 初始化配置
         ConfigManager.initialize(getDataFolder());
+        configManager = new ConfigManager();
         
         // 注册事件监听器
         getServer().getPluginManager().registerEvents(this, this);
+        
+        // 注册配方管理器
+        recipeManager = new RecipeManager(this);
+        recipeManager.registerRecipes();
+        
+        // 注册村民交易管理器
+        villagerTradeManager = new VillagerTradeManager(this);
+        getServer().getPluginManager().registerEvents(villagerTradeManager, this);
+        
+        // 注册实体行为管理器
+        entityBehaviorManager = new EntityBehaviorManager(this);
+        getServer().getPluginManager().registerEvents(entityBehaviorManager, this);
         
         // 注册命令
         getCommand("bravesurvival").setExecutor((sender, command, label, args) -> {
@@ -61,6 +78,13 @@ public class BraveSurvivalPlugin extends JavaPlugin implements Listener {
         setupGameRules();
         
         getLogger().info("BraveSurvival 插件启用成功！");
+    }
+    
+    /**
+     * 获取配置管理器
+     */
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
     
     @Override

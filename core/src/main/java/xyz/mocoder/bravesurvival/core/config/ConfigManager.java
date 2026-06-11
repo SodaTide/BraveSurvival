@@ -597,4 +597,14 @@ public class ConfigManager {
         JsonObject structuresConfig = getStructuresConfig();
         return structuresConfig.has("shipwrecks_guarded_by_drowned") && structuresConfig.get("shipwrecks_guarded_by_drowned").getAsBoolean();
     }
+    
+    /**
+     * 获取村民配置
+     */
+    public static JsonObject getVillagerConfig() {
+        if (config != null && config.has("villager")) {
+            return config.getAsJsonObject("villager");
+        }
+        return new JsonObject();
+    }
 }
