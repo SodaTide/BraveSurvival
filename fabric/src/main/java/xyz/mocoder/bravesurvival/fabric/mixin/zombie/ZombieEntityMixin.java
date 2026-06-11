@@ -1,6 +1,7 @@
 package xyz.mocoder.bravesurvival.fabric.mixin.zombie;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.world.World;
@@ -8,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.mocoder.bravesurvival.fabric.entity.FabricEntityWrapper;
+import xyz.mocoder.bravesurvival.core.config.ConfigManager;
 import xyz.mocoder.bravesurvival.core.logic.mob.MobEnhancer;
 
 /**
@@ -29,20 +30,18 @@ public abstract class ZombieEntityMixin extends HostileEntity {
     @Inject(method = "createZombieAttributes", at = @At("HEAD"), cancellable = true)
     private static void enhanceZombieAttributes(CallbackInfoReturnable cir) {
         // 使用核心逻辑强化僵尸
-        // 注意：这里我们需要返回修改后的属性构建器
-        // 由于Mixin的限制，我们返回一个新的构建器
         cir.setReturnValue(
             HostileEntity.createHostileAttributes()
-                .add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH, 
-                     MobEnhancer.getMobAttribute("zombie", "health", 20.0))
-                .add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE, 
-                     MobEnhancer.getMobAttribute("zombie", "damage", 8.0))
-                .add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MOVEMENT_SPEED, 
-                     MobEnhancer.getMobAttribute("zombie", "speed", 0.35))
-                .add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_FOLLOW_RANGE, 
-                     MobEnhancer.getMobAttribute("zombie", "follow_range", 55.0))
-                .add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ARMOR, 
-                     MobEnhancer.getMobAttribute("zombie", "armor", 3.0))
+                .add(EntityAttributes.MAX_HEALTH, 
+                     ConfigManager.getMobAttribute("zombie", "health", 20.0))
+                .add(EntityAttributes.ATTACK_DAMAGE, 
+                     ConfigManager.getMobAttribute("zombie", "damage", 8.0))
+                .add(EntityAttributes.MOVEMENT_SPEED, 
+                     ConfigManager.getMobAttribute("zombie", "speed", 0.35))
+                .add(EntityAttributes.FOLLOW_RANGE, 
+                     ConfigManager.getMobAttribute("zombie", "follow_range", 55.0))
+                .add(EntityAttributes.ARMOR, 
+                     ConfigManager.getMobAttribute("zombie", "armor", 3.0))
         );
     }
     
@@ -53,8 +52,8 @@ public abstract class ZombieEntityMixin extends HostileEntity {
     @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
     private void disableDaylightBurning(CallbackInfoReturnable cir) {
         // 检查配置是否禁止僵尸在日光下燃烧
-        if (!MobEnhancer.getMobConfig("zombie").has("burn_in_daylight") || 
-            !MobEnhancer.getMobConfig("zombie").get("burn_in_daylight").getAsBoolean()) {
+        if (!ConfigManager.getMobConfig("zombie").has("burn_in_daylight") || 
+            !ConfigManager.getMobConfig("zombie").get("burn_in_daylight").getAsBoolean()) {
             cir.setReturnValue(false);
         }
     }

@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import xyz.mocoder.bravesurvival.core.config.ConfigManager;
 import xyz.mocoder.bravesurvival.fabric.events.FabricEventAdapter;
 
+import java.io.File;
+import java.nio.file.Path;
+
 /**
  * BraveSurvival Fabric模组主类
  */
@@ -19,11 +22,9 @@ public class BraveSurvivalMod implements ModInitializer {
         LOGGER.info("正在初始化 BraveSurvival 模组...");
         
         // 初始化配置
-        // 注意：Fabric模组中，数据文件夹需要在运行时获取
-        // 这里我们使用一个临时方案，在服务器启动时初始化
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            // 获取服务器数据文件夹
-            java.io.File dataFolder = new java.io.File(server.getRunDirectory(), "config/bravesurvival");
+            Path runDir = server.getRunDirectory();
+            File dataFolder = runDir.resolve("config").resolve("bravesurvival").toFile();
             ConfigManager.initialize(dataFolder);
             LOGGER.info("配置已加载");
         });

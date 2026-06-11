@@ -20,32 +20,32 @@ public class FabricEntityWrapper implements EntityWrapper {
     
     @Override
     public void setMaxHealth(double health) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(health);
+        entity.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(health);
     }
     
     @Override
     public void setAttackDamage(double damage) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+        entity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).setBaseValue(damage);
     }
     
     @Override
     public void setMovementSpeed(double speed) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
+        entity.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(speed);
     }
     
     @Override
     public void setFollowRange(double range) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE).setBaseValue(range);
+        entity.getAttributeInstance(EntityAttributes.FOLLOW_RANGE).setBaseValue(range);
     }
     
     @Override
     public void setArmor(double armor) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(armor);
+        entity.getAttributeInstance(EntityAttributes.ARMOR).setBaseValue(armor);
     }
     
     @Override
     public void setKnockbackResistance(double resistance) {
-        entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(resistance);
+        entity.getAttributeInstance(EntityAttributes.KNOCKBACK_RESISTANCE).setBaseValue(resistance);
     }
     
     @Override
@@ -64,15 +64,14 @@ public class FabricEntityWrapper implements EntityWrapper {
     
     @Override
     public boolean isInDaylight() {
-        // 检查实体是否在日光下
-        return entity.world.isDay() && !entity.world.isRaining() && 
-               entity.world.isSkyVisible(entity.getBlockPos());
+        World world = entity.getWorld();
+        return world.isDay() && !world.isRaining() && 
+               world.isSkyVisible(entity.getBlockPos());
     }
     
     @Override
     public void setBurnsInDaylight(boolean burns) {
         // 这个需要在Mixin中实现
-        // 因为burnsInDaylight是ZombieEntity的方法
     }
     
     @Override
@@ -82,7 +81,7 @@ public class FabricEntityWrapper implements EntityWrapper {
     
     @Override
     public Object getWorld() {
-        return entity.world;
+        return entity.getWorld();
     }
     
     @Override
@@ -107,14 +106,11 @@ public class FabricEntityWrapper implements EntityWrapper {
     
     @Override
     public void spawnEntity(Object entity) {
-        if (this.entity.world instanceof ServerWorld serverWorld && entity instanceof LivingEntity livingEntity) {
+        if (this.entity.getWorld() instanceof ServerWorld serverWorld && entity instanceof LivingEntity livingEntity) {
             serverWorld.spawnEntity(livingEntity);
         }
     }
     
-    /**
-     * 获取原始实体
-     */
     public LivingEntity getEntity() {
         return entity;
     }
