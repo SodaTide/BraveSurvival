@@ -1,0 +1,67 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    // Paper API
+    compileOnly "io.papermc.paper:paper-api:${project.property('paper_version')}"
+    
+    // Core module
+    implementation project(':core')
+}
+
+// 配置sourceSets
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// 配置jar
+jar {
+    archiveBaseName.set('BraveSurvival-Paper')
+    archiveVersion.set(project.property('mod_version'))
+    
+    manifest {
+        attributes(
+            'Implementation-Title': 'BraveSurvival Paper Plugin',
+            'Implementation-Version': project.property('mod_version')
+        )
+    }
+    
+    // 包含core模块
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+// 配置发布
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+}

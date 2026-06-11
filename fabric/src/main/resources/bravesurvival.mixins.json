@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "xyz.mocoder.bravesurvival.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "zombie.ZombieEntityMixin",
+    "creeper.CreeperEntityMixin",
+    "enderman.EndermanEntityMixin",
+    "skeleton.SkeletonEntityMixin",
+    "piglin.PiglinEntityMixin",
+    "phantom.PhantomEntityMixin",
+    "guardian.GuardianEntityMixin",
+    "hoglin.HoglinEntityMixin",
+    "irongolem.IronGolemEntityMixin",
+    "player.PlayerEntityMixin",
+    "player.LivingEntityMixin",
+    "block.BlockMixin",
+    "boat.BoatEntityMixin",
+    "item.ShieldMixin",
+    "weather.WeatherThunderMixin",
+    "spawn.SpawnHelperMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

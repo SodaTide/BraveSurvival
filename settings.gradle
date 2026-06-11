@@ -1,10 +1,17 @@
 pluginManagement {
     repositories {
-        jcenter()
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'PaperMC'
+            url = 'https://repo.papermc.io/repository/maven-public/'
+        }
         gradlePluginPortal()
+        mavenCentral()
     }
 }
+
+rootProject.name = 'BraveSurvival'
+include('core', 'fabric', 'paper')
