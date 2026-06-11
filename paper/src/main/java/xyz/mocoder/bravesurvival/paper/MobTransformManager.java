@@ -39,14 +39,92 @@ public class MobTransformManager implements Listener {
     
     public void initialize() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        
+        // 启动定时任务：检测玩家附近的生物并触发变形
+        startTransformationTask();
     }
     
-    // ==================== 被动生物变形 ====================
+    /**
+     * 启动变形定时任务
+     * 每10tick（0.5秒）检测一次玩家附近的生物
+     */
+    private void startTransformationTask() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Location playerLoc = player.getLocation();
+                    
+                    // 检测8格内的牛/羊
+                    for (Entity entity : player.getNearbyEntities(8, 8, 8)) {
+                        if (entity instanceof Cow cow) {
+                            transformEntity(cow, Rabbit.class, playerLoc);
+                        } else if (entity instanceof Sheep sheep) {
+                            transformEntity(sheep, Rabbit.class, playerLoc);
+                        } else if (entity instanceof Pig pig) {
+                            transformEntity(pig, Hoglin.class, playerLoc);
+                        } else if (entity instanceof Chicken chicken) {
+                            transformToJockey(chicken, playerLoc);
+                        } else if (entity instanceof Dolphin dolphin) {
+                            // 海豚10格
+                            if (player.getLocation().distance(dolphin.getLocation()) <= 10) {
+                                transformEntity(dolphin, Cod.class, playerLoc);
+                            }
+                        } else if (isFish(entity)) {
+                            // 鱼16格，33%几率
+                            if (player.getLocation().distance(entity.getLocation()) <= 16) {
+                                if (random.nextDouble() < 0.33) {
+                                    transformEntity(entity, Guardian.class, playerLoc);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 10L); // 延迟1秒启动，每0.5秒执行一次
+    }
+    
+    /**
+     * 变形实体
+     */
+    private void transformEntity(Entity from, Class<? extends Entity> toClass, Location playerLoc) {
+        Location loc = from.getLocation();
+        World world = loc.getWorld();
+        
+        // 移除原实体
+        from.remove();
+        
+        // 生成新实体
+        Entity newEntity = world.spawn(loc, toClass);
+        
+        // 播放音效
+        world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
+    }
+    
+    /**
+     * 变形为骷髅骑手
+     */
+    private void transformToJockey(Chicken chicken, Location playerLoc) {
+        Location loc = chicken.getLocation();
+        World world = loc.getWorld();
+        
+        // 移除鸡
+        chicken.remove();
+        
+        // 生成骷髅骑手
+        Skeleton skeleton = world.spawn(loc, Skeleton.class);
+        Chicken newChicken = world.spawn(loc, Chicken.class);
+        newChicken.addPassenger(skeleton);
+        
+        // 播放音效
+        world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
+    }
+    
+    // ==================== 被动生物变形（生成时检查）====================
     
     @EventHandler(priority = EventPriority.HIGH)
     public void onCreatureSpawnForTransformation(CreatureSpawnEvent event) {
         if (event.isCancelled()) return;
-        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
         
         Location loc = event.getLocation();
         World world = loc.getWorld();
@@ -56,6 +134,7 @@ public class MobTransformManager implements Listener {
             if (hasPlayerNearby(loc, 8.0)) {
                 event.setCancelled(true);
                 world.spawn(loc, Rabbit.class);
+                world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
                 return;
             }
         }
@@ -65,6 +144,7 @@ public class MobTransformManager implements Listener {
             if (hasPlayerNearby(loc, 10.0)) {
                 event.setCancelled(true);
                 world.spawn(loc, Cod.class);
+                world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
                 return;
             }
         }
@@ -74,6 +154,7 @@ public class MobTransformManager implements Listener {
             if (hasPlayerNearby(loc, 8.0)) {
                 event.setCancelled(true);
                 world.spawn(loc, Hoglin.class);
+                world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
                 return;
             }
         }
@@ -85,6 +166,7 @@ public class MobTransformManager implements Listener {
                 Skeleton skeleton = world.spawn(loc, Skeleton.class);
                 Chicken chicken = world.spawn(loc, Chicken.class);
                 chicken.addPassenger(skeleton);
+                world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
                 return;
             }
         }
@@ -94,6 +176,7 @@ public class MobTransformManager implements Listener {
             if (hasPlayerNearby(loc, 16.0) && random.nextDouble() < 0.33) {
                 event.setCancelled(true);
                 world.spawn(loc, Guardian.class);
+                world.playSound(loc, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 1.2f);
                 return;
             }
         }
