@@ -1,0 +1,218 @@
+{
+  "mobs": {
+    "zombie": {
+      "enabled": true,
+      "health": 20.0,
+      "damage": 5.0,
+      "speed": 0.23,
+      "follow_range": 64.0,
+      "armor": 0.0,
+      "burn_in_daylight": false,
+      "enhanced_armor": true,
+      "enhanced_enchantments": true,
+      "spawn_reinforcements": 0.15,
+      "fire_resistance": true,
+      "drowned_always_trident": true
+    },
+    "creeper": {
+      "enabled": true,
+      "always_charged": true,
+      "instant_fuse": true,
+      "invisible": true,
+      "explosion_radius": 10,
+      "speed": 0.3
+    },
+    "enderman": {
+      "enabled": true,
+      "health": 40.0,
+      "damage": 7.0,
+      "speed": 0.3,
+      "follow_range": 64.0,
+      "teleport_after_hit": true,
+      "destroy_blocks": true
+    },
+    "skeleton": {
+      "enabled": true,
+      "damage": 10.0,
+      "burn_in_daylight": false,
+      "enhanced_armor": true,
+      "enhanced_enchantments": true,
+      "auto_aim": true,
+      "power_bow": true,
+      "netherite_helmet": true
+    },
+    "spider": {
+      "enabled": true,
+      "invisible": true,
+      "speed": 0.4,
+      "poison_on_hit": true
+    },
+    "piglin": {
+      "enabled": true,
+      "health": 16.0,
+      "damage": 5.0,
+      "speed": 0.3,
+      "always_angry_unless_full_gold": true
+    },
+    "phantom": {
+      "enabled": true,
+      "burn_in_daylight": false,
+      "damage": 6.0
+    },
+    "guardian": {
+      "enabled": true,
+      "health": 30.0,
+      "damage": 6.0,
+      "speed": 0.5,
+      "follow_range": 16.0
+    },
+    "hoglin": {
+      "enabled": true,
+      "health": 40.0,
+      "damage": 6.0,
+      "speed": 0.3,
+      "knockback_resistance": 0.6
+    },
+    "iron_golem": {
+      "enabled": true,
+      "attack_players": true,
+      "increased_health": true,
+      "jump_explosion": true
+    },
+    "blaze": {
+      "enabled": true,
+      "fly_only": true,
+      "increased_speed": true,
+      "fire_trail": true,
+      "fireballs_spread_fire": true
+    },
+    "ghast": {
+      "enabled": true,
+      "spawn_in_triples": true,
+      "invisible": true,
+      "larger_explosions": true
+    },
+    "pillager": {
+      "enabled": true,
+      "quick_charge_5": true,
+      "multishot": true,
+      "auto_aim": true,
+      "spawn_in_pairs": true,
+      "ravager_with_pillager": true
+    },
+    "witch": {
+      "enabled": true,
+      "wither_skulls": true,
+      "splash_potions": true,
+      "spawn_with_wither_skeletons": true
+    },
+    "illusioner": {
+      "enabled": true,
+      "auto_aim": true,
+      "power_bow": true
+    },
+    "wither_skeleton": {
+      "enabled": true,
+      "wither_effect": true,
+      "destroy_blocks_near_skulls": true
+    },
+    "silverfish": {
+      "enabled": true,
+      "knockback_resistant": true,
+      "speed": 0.4,
+      "spawn_from_stone": true
+    },
+    "endermite": {
+      "enabled": true,
+      "knockback_resistant": true,
+      "speed": 0.4,
+      "spawn_from_end_stone": true,
+      "spawn_from_dead_endermen": true
+    }
+  },
+  "player": {
+    "fall_damage_debuff": true,
+    "weakness_duration": 10,
+    "slowness_duration": 10,
+    "no_natural_regeneration": true,
+    "mining_fatigue_without_tools": true,
+    "hunger_effects": true,
+    "starving_faster": true,
+    "heavy_armor_slowness": true,
+    "drop_items_on_hit": true,
+    "drop_items_on_move": true
+  },
+  "world": {
+    "spawn_multiplier": 8,
+    "thunder_density": true,
+    "skeleton_horse_chance": 0.01,
+    "universal_anger": true,
+    "forgive_dead_players": false,
+    "reduced_debug_info": true,
+    "random_mob_noises_in_dark": true,
+    "lava_heat_damage": true,
+    "cactus_poison": true,
+    "doors_break_in_water": true,
+    "drowning_effects": true,
+    "sleep_skips_third_of_night": true,
+    "wake_up_to_phantoms": true,
+    "random_lightning_storms": true,
+    "portal_break_chance": true
+  },
+  "blocks": {
+    "silverfish_chance": 0.0625,
+    "silverfish_blocks": [
+      "minecraft:stone",
+      "minecraft:sandstone",
+      "minecraft:cobblestone",
+      "minecraft:andesite",
+      "minecraft:granite",
+      "minecraft:basalt",
+      "minecraft:blackstone"
+    ],
+    "stone_drop_chance_with_low_pickaxe": 0.5,
+    "ore_drop_chance": 0.5,
+    "hay_block_no_drop_without_silk_touch": true,
+    "tnt_break_explodes_chance": 0.1,
+    "obsidian_heavy_hunger": true,
+    "infested_stone_spawns_evoker_fangs": true
+  },
+  "items": {
+    "shield_durability_multiplier": 3.0,
+    "blaze_rod_burns": true,
+    "blaze_powder_burns": true,
+    "lava_bucket_burns": true,
+    "rotten_flesh_more_hunger": true,
+    "raw_food_hunger_and_nausea": true,
+    "meat_spoil_chance": 0.0166,
+    "food_poisoning_chance": 0.0166
+  },
+  "boat": {
+    "sink_after_ticks": 600,
+    "sink_speed_multiplier": 0.05,
+    "hunger_from_rowing": true
+  },
+  "recipes": {
+    "planks_per_log": 2,
+    "blaze_rod_to_powder": 1,
+    "golden_carrot_requires_ingots": true,
+    "glistering_melon_requires_ingots": true,
+    "ores_double_time_in_furnace": true,
+    "ores_normal_time_in_blast_furnace": true
+  },
+  "combat": {
+    "arrows_misfire_chance": 0.1,
+    "ender_pearls_always_spawn_endermites": true,
+    "ender_crystals_reflect_projectiles": true,
+    "totem_nerfed_drop": true,
+    "totem_nerfed_regeneration": true,
+    "bad_omen_on_village_enter": true
+  },
+  "structures": {
+    "desert_temple_husks": true,
+    "ruined_portal_illusioners": true,
+    "jungle_temple_illusioners": true,
+    "shipwrecks_guarded_by_drowned": true,
+    "buried_treasure_guarded_by_vexes": true
+  }
+}
