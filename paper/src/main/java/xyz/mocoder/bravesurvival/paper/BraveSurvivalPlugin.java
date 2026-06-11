@@ -9,6 +9,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.*;
 import org.bukkit.event.world.*;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.EntityEquipment;
@@ -1000,6 +1001,434 @@ public class BraveSurvivalPlugin extends JavaPlugin implements Listener {
             if (event.getEntity() instanceof Player player) {
                 if (ConfigManager.isCactusPoison()) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 0, false, false));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听实体生成事件 - 溺尸三叉戟
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawnForDrowned(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 所有溺尸都有三叉戟
+        if (event.getEntity() instanceof Drowned drowned) {
+            if (ConfigManager.getMobConfig("zombie").has("drowned_always_trident") && 
+                ConfigManager.getMobConfig("zombie").get("drowned_always_trident").getAsBoolean()) {
+                drowned.getEquipment().setItemInMainHand(new ItemStack(Material.TRIDENT));
+            }
+        }
+    }
+    
+    /**
+     * 监听实体伤害事件 - 尸壳给予饥饿
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageForHusk(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 尸壳给予饥饿
+        if (event.getDamager() instanceof Husk && event.getEntity() instanceof Player player) {
+            if (ConfigManager.getMobConfig("zombie").has("husk_hunger") && 
+                ConfigManager.getMobConfig("zombie").get("husk_hunger").getAsBoolean()) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 1, false, false));
+            }
+        }
+        
+        // 流浪者给予缓慢
+        if (event.getDamager() instanceof Stray && event.getEntity() instanceof Player player) {
+            if (ConfigManager.getMobConfig("skeleton").has("stray_slowness") && 
+                ConfigManager.getMobConfig("skeleton").get("stray_slowness").getAsBoolean()) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 200, 1, false, false));
+            }
+        }
+        
+        // 蜜蜂更快中毒
+        if (event.getDamager() instanceof Bee && event.getEntity() instanceof Player player) {
+            if (ConfigManager.getMobConfig("bee") != null && 
+                ConfigManager.getMobConfig("bee").has("faster_poison") && 
+                ConfigManager.getMobConfig("bee").get("faster_poison").getAsBoolean()) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 1, false, false));
+            }
+        }
+    }
+    
+    /**
+     * 监听方块破坏事件 - 干草块/矿石掉落
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreakForDrops(BlockBreakEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 干草块没有精准采集不掉落
+        if (event.getBlock().getType() == Material.HAY_BLOCK) {
+            if (ConfigManager.getBlocksConfig().has("hay_block_no_drop_without_silk_touch") && 
+                ConfigManager.getBlocksConfig().get("hay_block_no_drop_without_silk_touch").getAsBoolean()) {
+                if (!event.getPlayer().getInventory().getItemInMainHand().getEnchantments().containsKey(org.bukkit.enchantments.Enchantment.SILK_TOUCH)) {
+                    event.setDropItems(false);
+                }
+            }
+        }
+        
+        // 主世界矿石不总是掉落
+        if (isOverworldOre(event.getBlock().getType())) {
+            if (ConfigManager.getBlocksConfig().has("ore_drop_chance")) {
+                double chance = ConfigManager.getBlocksConfig().get("ore_drop_chance").getAsDouble();
+                if (Math.random() > chance) {
+                    event.setDropItems(false);
+                }
+            }
+        }
+        
+        // 挖掘黑曜石给予重度饥饿
+        if (event.getBlock().getType() == Material.OBSIDIAN) {
+            if (ConfigManager.getBlocksConfig().has("obsidian_heavy_hunger") && 
+                ConfigManager.getBlocksConfig().get("obsidian_heavy_hunger").getAsBoolean()) {
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 600, 2, false, false));
+            }
+        }
+        
+        // 挖末地石生成末影螨
+        if (event.getBlock().getType() == Material.END_STONE) {
+            if (ConfigManager.getMobConfig("endermite").has("spawn_from_end_stone") && 
+                ConfigManager.getMobConfig("endermite").get("spawn_from_end_stone").getAsBoolean()) {
+                if (Math.random() < 0.1) { // 10%概率
+                    event.getBlock().getWorld().spawnEntity(
+                        event.getBlock().getLocation().add(0.5, 0, 0.5),
+                        EntityType.ENDERMITE
+                    );
+                }
+            }
+        }
+    }
+    
+    /**
+     * 检查是否是主世界矿石
+     */
+    private boolean isOverworldOre(Material material) {
+        return material == Material.COAL_ORE || material == Material.DEEPSLATE_COAL_ORE ||
+               material == Material.IRON_ORE || material == Material.DEEPSLATE_IRON_ORE ||
+               material == Material.GOLD_ORE || material == Material.DEEPSLATE_GOLD_ORE ||
+               material == Material.DIAMOND_ORE || material == Material.DEEPSLATE_DIAMOND_ORE ||
+               material == Material.EMERALD_ORE || material == Material.DEEPSLATE_EMERALD_ORE ||
+               material == Material.LAPIS_ORE || material == Material.DEEPSLATE_LAPIS_ORE ||
+               material == Material.REDSTONE_ORE || material == Material.DEEPSLATE_REDSTONE_ORE ||
+               material == Material.COPPER_ORE || material == Material.DEEPSLATE_COPPER_ORE;
+    }
+    
+    /**
+     * 监听实体死亡事件 - 末影人死亡生成末影螨
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDeathForEndermite(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Enderman enderman) {
+            if (ConfigManager.getMobConfig("endermite").has("spawn_from_dead_endermen") && 
+                ConfigManager.getMobConfig("endermite").get("spawn_from_dead_endermen").getAsBoolean()) {
+                // 生成末影螨
+                enderman.getWorld().spawnEntity(enderman.getLocation(), EntityType.ENDERMITE);
+            }
+        }
+    }
+    
+    /**
+     * 监听实体攻击事件 - 末影人攻击后传送
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageByEntityForEnderman(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 末影人攻击后传送
+        if (event.getDamager() instanceof Enderman enderman && event.getEntity() instanceof Player) {
+            if (ConfigManager.getMobConfig("enderman").has("teleport_after_hit") && 
+                ConfigManager.getMobConfig("enderman").get("teleport_after_hit").getAsBoolean()) {
+                // 延迟传送
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (enderman.isValid()) {
+                            // 随机传送
+                            double x = enderman.getLocation().getX() + (random.nextInt(20) - 10);
+                            double z = enderman.getLocation().getZ() + (random.nextInt(20) - 10);
+                            double y = enderman.getWorld().getHighestBlockYAt((int) x, (int) z);
+                            enderman.teleport(new org.bukkit.Location(enderman.getWorld(), x, y, z));
+                        }
+                    }
+                }.runTaskLater(this, 5L);
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家死亡事件 - 死亡生成强大僵尸
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDeathForZombie(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        
+        // 死亡生成强大僵尸
+        if (ConfigManager.getPlayerConfig().has("death_spawn_zombie") && 
+            ConfigManager.getPlayerConfig().get("death_spawn_zombie").getAsBoolean()) {
+            Zombie zombie = player.getWorld().spawn(player.getLocation(), Zombie.class);
+            zombie.setCustomName("§c§l死亡僵尸");
+            zombie.setCustomNameVisible(true);
+            // 设置强大属性
+            PaperEntityWrapper wrapper = new PaperEntityWrapper(zombie);
+            wrapper.setMaxHealth(50.0);
+            wrapper.setAttackDamage(10.0);
+            wrapper.setMovementSpeed(0.3);
+            // 给予装备
+            zombie.getEquipment().setHelmet(new ItemStack(Material.NETHERITE_HELMET));
+            zombie.getEquipment().setChestplate(new ItemStack(Material.NETHERITE_CHESTPLATE));
+            zombie.getEquipment().setLeggings(new ItemStack(Material.NETHERITE_LEGGINGS));
+            zombie.getEquipment().setBoots(new ItemStack(Material.NETHERITE_BOOTS));
+            zombie.getEquipment().setItemInMainHand(new ItemStack(Material.NETHERITE_SWORD));
+        }
+    }
+    
+    /**
+     * 监听实体爆炸事件 - 末地爆炸辐射
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityExplodeForRadiation(EntityExplodeEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 末地爆炸辐射
+        if (event.getEntity().getWorld().getEnvironment() == org.bukkit.World.Environment.THE_END) {
+            if (ConfigManager.getCombatConfig().has("explosion_radiation_in_end") && 
+                ConfigManager.getCombatConfig().get("explosion_radiation_in_end").getAsBoolean()) {
+                // 对附近的玩家造成伤害
+                event.getEntity().getNearbyEntities(10, 10, 10).stream()
+                    .filter(e -> e instanceof Player)
+                    .forEach(e -> {
+                        Player player = (Player) e;
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 1, false, false));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 100, 0, false, false));
+                    });
+            }
+        }
+    }
+    
+    /**
+     * 监听药水效果事件 - 药水有副作用
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPotionSplash(PotionSplashEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 药水有副作用
+        if (ConfigManager.getCombatConfig().has("potion_side_effects") && 
+            ConfigManager.getCombatConfig().get("potion_side_effects").getAsBoolean()) {
+            if (Math.random() < 0.2) { // 20%概率
+                // 给予随机负面效果
+                PotionEffectType[] negativeEffects = {
+                    PotionEffectType.POISON, PotionEffectType.WITHER, 
+                    PotionEffectType.NAUSEA, PotionEffectType.BLINDNESS
+                };
+                PotionEffectType randomEffect = negativeEffects[random.nextInt(negativeEffects.length)];
+                event.getAffectedEntities().forEach(entity -> {
+                    if (entity instanceof LivingEntity) {
+                        ((LivingEntity) entity).addPotionEffect(new PotionEffect(randomEffect, 100, 0, false, false));
+                    }
+                });
+            }
+        }
+    }
+    
+    /**
+     * 监听实体交互事件 - 马踢下玩家
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityInteractForHorse(PlayerInteractEntityEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 马踢下玩家
+        if (event.getRightClicked() instanceof AbstractHorse horse) {
+            if (ConfigManager.getMobConfig("horse") != null && 
+                ConfigManager.getMobConfig("horse").has("kick_chance")) {
+                double chance = ConfigManager.getMobConfig("horse").get("kick_chance").getAsDouble();
+                if (Math.random() < chance) {
+                    horse.eject();
+                    event.getPlayer().sendMessage("§c马把你踢下来了！");
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听实体生成事件 - 鸡变成骷髅骑士
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawnForChicken(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 鸡变成骷髅骑士
+        if (event.getEntity() instanceof Chicken chicken) {
+            if (ConfigManager.getMobConfig("chicken") != null && 
+                ConfigManager.getMobConfig("chicken").has("turn_into_jockey")) {
+                // 查找附近的玩家
+                Player nearestPlayer = null;
+                double closestDistance = 16.0;
+                for (Player player : chicken.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(chicken.getLocation());
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+                if (nearestPlayer != null) {
+                    // 生成骷髅骑士
+                    Skeleton skeleton = chicken.getWorld().spawn(chicken.getLocation(), Skeleton.class);
+                    skeleton.addPassenger(chicken);
+                }
+            }
+        }
+        
+        // 猪变成疣猪兽
+        if (event.getEntity() instanceof Pig pig) {
+            if (ConfigManager.getMobConfig("pig") != null && 
+                ConfigManager.getMobConfig("pig").has("turn_into_hoglin")) {
+                // 查找附近的玩家
+                Player nearestPlayer = null;
+                double closestDistance = 16.0;
+                for (Player player : pig.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(pig.getLocation());
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+                if (nearestPlayer != null) {
+                    // 变成疣猪兽
+                    pig.getWorld().spawn(pig.getLocation(), Hoglin.class);
+                    pig.remove();
+                }
+            }
+        }
+        
+        // 海豚变成鳕鱼
+        if (event.getEntity() instanceof Dolphin dolphin) {
+            if (ConfigManager.getMobConfig("dolphin") != null && 
+                ConfigManager.getMobConfig("dolphin").has("turn_into_cod")) {
+                // 查找附近的玩家
+                Player nearestPlayer = null;
+                double closestDistance = 16.0;
+                for (Player player : dolphin.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(dolphin.getLocation());
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+                if (nearestPlayer != null) {
+                    // 变成鳕鱼
+                    dolphin.getWorld().spawn(dolphin.getLocation(), Cod.class);
+                    dolphin.remove();
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听方块放置事件 - 踩被虫蚀石头召唤唤魔者尖牙
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerMoveForInfested(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 踩被虫蚀石头召唤唤魔者尖牙
+        if (ConfigManager.getBlocksConfig().has("infested_stone_spawns_evoker_fangs") && 
+            ConfigManager.getBlocksConfig().get("infested_stone_spawns_evoker_fangs").getAsBoolean()) {
+            if (event.getFrom().getBlockX() != event.getTo().getBlockX() ||
+                event.getFrom().getBlockY() != event.getTo().getBlockY() ||
+                event.getFrom().getBlockZ() != event.getTo().getBlockZ()) {
+                
+                org.bukkit.block.Block blockBelow = event.getTo().getBlock().getRelative(0, -1, 0);
+                if (blockBelow.getType() == Material.INFESTED_STONE || 
+                    blockBelow.getType() == Material.INFESTED_COBBLESTONE ||
+                    blockBelow.getType() == Material.INFESTED_DEEPSLATE) {
+                    // 生成唤魔者尖牙
+                    event.getPlayer().getWorld().spawnEntity(
+                        event.getPlayer().getLocation(),
+                        EntityType.EVOKER_FANGS
+                    );
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听船移动事件 - 船沉没
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onVehicleMoveForSink(VehicleMoveEvent event) {
+        if (event.getVehicle() instanceof Boat boat) {
+            // 检查是否有玩家乘客
+            if (boat.getPassengers().size() > 0 && boat.getPassengers().get(0) instanceof Player) {
+                // 船沉没
+                if (ConfigManager.getBoatConfig().has("sink_after_ticks")) {
+                    int sinkTicks = ConfigManager.getBoatConfig().get("sink_after_ticks").getAsInt();
+                    // 这里需要实现船沉没逻辑
+                    // 由于Paper API限制，可能需要更复杂的实现
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家使用物品事件 - 划船消耗饥饿
+     */
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerMoveForBoatHunger(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 划船消耗饥饿
+        if (ConfigManager.getBoatConfig().has("hunger_from_rowing") && 
+            ConfigManager.getBoatConfig().get("hunger_from_rowing").getAsBoolean()) {
+            if (event.getPlayer().isInsideVehicle() && event.getPlayer().getVehicle() instanceof Boat) {
+                if (Math.random() < 0.01) { // 1%概率
+                    event.getPlayer().setFoodLevel(Math.max(0, event.getPlayer().getFoodLevel() - 1));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听实体生成事件 - 恶魂三只生成
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawnForGhast(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 恶魂三只生成
+        if (event.getEntity() instanceof Ghast ghast) {
+            if (ConfigManager.getMobConfig("ghast").has("spawn_in_triples") && 
+                ConfigManager.getMobConfig("ghast").get("spawn_in_triples").getAsBoolean()) {
+                // 生成额外两只恶魂
+                ghast.getWorld().spawn(ghast.getLocation().add(5, 0, 0), Ghast.class);
+                ghast.getWorld().spawn(ghast.getLocation().add(0, 0, 5), Ghast.class);
+            }
+        }
+    }
+    
+    /**
+     * 监听实体生成事件 - 守卫者与鱼一起生成
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawnForGuardian(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 守卫者与鱼一起生成
+        if (event.getEntity() instanceof Guardian guardian) {
+            if (ConfigManager.getMobConfig("guardian") != null && 
+                ConfigManager.getMobConfig("guardian").has("spawn_with_fish")) {
+                // 生成鱼
+                for (int i = 0; i < 3; i++) {
+                    guardian.getWorld().spawnEntity(
+                        guardian.getLocation().add(random.nextInt(5) - 2, 0, random.nextInt(5) - 2),
+                        EntityType.COD
+                    );
                 }
             }
         }
