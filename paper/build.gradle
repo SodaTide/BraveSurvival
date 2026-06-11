@@ -43,6 +43,7 @@ tasks.withType(JavaCompile) {
 jar {
     archiveBaseName.set('BraveSurvival-Paper')
     archiveVersion.set(project.property('mod_version'))
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     manifest {
         attributes(
@@ -54,14 +55,5 @@ jar {
     // 包含core模块
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
-// 配置发布
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
     }
 }

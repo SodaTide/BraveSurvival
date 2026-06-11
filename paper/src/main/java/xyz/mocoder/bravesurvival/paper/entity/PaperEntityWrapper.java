@@ -1,6 +1,8 @@
 package xyz.mocoder.bravesurvival.paper.entity;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -16,34 +18,61 @@ public class PaperEntityWrapper implements EntityWrapper {
         this.entity = entity;
     }
     
+    private AttributeInstance getAttribute(String key) {
+        try {
+            Attribute attr = Attribute.valueOf(key);
+            return entity.getAttribute(attr);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
     @Override
     public void setMaxHealth(double health) {
-        entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
+        AttributeInstance attr = getAttribute("GENERIC_MAX_HEALTH");
+        if (attr != null) {
+            attr.setBaseValue(health);
+        }
     }
     
     @Override
     public void setAttackDamage(double damage) {
-        entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+        AttributeInstance attr = getAttribute("GENERIC_ATTACK_DAMAGE");
+        if (attr != null) {
+            attr.setBaseValue(damage);
+        }
     }
     
     @Override
     public void setMovementSpeed(double speed) {
-        entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
+        AttributeInstance attr = getAttribute("GENERIC_MOVEMENT_SPEED");
+        if (attr != null) {
+            attr.setBaseValue(speed);
+        }
     }
     
     @Override
     public void setFollowRange(double range) {
-        entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(range);
+        AttributeInstance attr = getAttribute("GENERIC_FOLLOW_RANGE");
+        if (attr != null) {
+            attr.setBaseValue(range);
+        }
     }
     
     @Override
     public void setArmor(double armor) {
-        entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armor);
+        AttributeInstance attr = getAttribute("GENERIC_ARMOR");
+        if (attr != null) {
+            attr.setBaseValue(armor);
+        }
     }
     
     @Override
     public void setKnockbackResistance(double resistance) {
-        entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(resistance);
+        AttributeInstance attr = getAttribute("GENERIC_KNOCKBACK_RESISTANCE");
+        if (attr != null) {
+            attr.setBaseValue(resistance);
+        }
     }
     
     @Override
@@ -62,7 +91,6 @@ public class PaperEntityWrapper implements EntityWrapper {
     
     @Override
     public boolean isInDaylight() {
-        // 检查实体是否在日光下
         return entity.getWorld().isDayTime() && 
                !entity.getWorld().hasStorm() && 
                entity.getLocation().getY() > entity.getWorld().getHighestBlockYAt(entity.getLocation());
@@ -70,8 +98,7 @@ public class PaperEntityWrapper implements EntityWrapper {
     
     @Override
     public void setBurnsInDaylight(boolean burns) {
-        // 这个需要在事件监听器中实现
-        // Paper API没有直接的方法来设置这个
+        // 需要在事件监听器中实现
     }
     
     @Override
@@ -111,9 +138,6 @@ public class PaperEntityWrapper implements EntityWrapper {
         }
     }
     
-    /**
-     * 获取原始实体
-     */
     public LivingEntity getEntity() {
         return entity;
     }

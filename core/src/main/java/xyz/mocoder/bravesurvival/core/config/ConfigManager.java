@@ -295,4 +295,30 @@ public class ConfigManager {
         }
         return new JsonObject();
     }
+    
+    /**
+     * 检查是否启用雷电密度
+     */
+    public static boolean isThunderDensityEnabled() {
+        JsonObject worldConfig = getWorldConfig();
+        return worldConfig.has("thunder_density") && worldConfig.get("thunder_density").getAsBoolean();
+    }
+    
+    /**
+     * 获取骷髅马生成概率
+     */
+    public static double getSkeletonHorseChance() {
+        JsonObject worldConfig = getWorldConfig();
+        return worldConfig.has("skeleton_horse_chance") ? 
+               worldConfig.get("skeleton_horse_chance").getAsDouble() : 0.01;
+    }
+    
+    /**
+     * 获取生成倍数
+     */
+    public static int getSpawnMultiplier() {
+        JsonObject worldConfig = getWorldConfig();
+        return worldConfig.has("spawn_multiplier") ? 
+               worldConfig.get("spawn_multiplier").getAsInt() : 8;
+    }
 }

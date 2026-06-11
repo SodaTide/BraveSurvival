@@ -43,12 +43,3 @@ jar {
         )
     }
 }
-
-// 配置发布
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-}
