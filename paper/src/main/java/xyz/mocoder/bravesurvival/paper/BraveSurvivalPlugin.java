@@ -564,4 +564,444 @@ public class BraveSurvivalPlugin extends JavaPlugin implements Listener {
             }
         }
     }
+    
+    /**
+     * 监听实体受伤事件 - 受伤掉落物品
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageForItemDrop(EntityDamageEvent event) {
+        if (event.isCancelled()) return;
+        
+        if (event.getEntity() instanceof Player player) {
+            // 受伤掉落物品
+            if (ConfigManager.getPlayerConfig().has("drop_items_on_hit") && 
+                ConfigManager.getPlayerConfig().get("drop_items_on_hit").getAsBoolean()) {
+                if (Math.random() < 0.3) { // 30%概率
+                    ItemStack[] contents = player.getInventory().getContents();
+                    for (int i = 0; i < contents.length; i++) {
+                        if (contents[i] != null && contents[i].getType() != Material.AIR) {
+                            player.getWorld().dropItemNaturally(player.getLocation(), contents[i]);
+                            player.getInventory().setItem(i, null);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听实体攻击事件 - 箭矢误射
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 箭矢误射
+        if (event.getEntity() instanceof Arrow arrow) {
+            if (ConfigManager.getCombatConfig().has("arrows_misfire_chance")) {
+                double chance = ConfigManager.getCombatConfig().get("arrows_misfire_chance").getAsDouble();
+                if (Math.random() < chance) {
+                    // 改变箭矢方向
+                    arrow.setVelocity(arrow.getVelocity().rotateAroundY(Math.toRadians(random.nextInt(90) - 45)));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听末影珍珠使用
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 末影珍珠生成末影螨
+        if (event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL) {
+            if (ConfigManager.getCombatConfig().has("ender_pearls_always_spawn_endermites") && 
+                ConfigManager.getCombatConfig().get("ender_pearls_always_spawn_endermites").getAsBoolean()) {
+                // 延迟生成末影螨
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player player = event.getPlayer();
+                        if (player.isOnline()) {
+                            player.getWorld().spawnEntity(player.getLocation(), EntityType.ENDERMITE);
+                        }
+                    }
+                }.runTaskLater(this, 20L);
+            }
+        }
+    }
+    
+    /**
+     * 监听实体爆炸事件 - 末地水晶反射弹射物
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 末地水晶爆炸
+        if (event.getEntity() instanceof EnderCrystal) {
+            if (ConfigManager.getCombatConfig().has("ender_crystals_reflect_projectiles") && 
+                ConfigManager.getCombatConfig().get("ender_crystals_reflect_projectiles").getAsBoolean()) {
+                // 反射附近的弹射物
+                event.getEntity().getNearbyEntities(10, 10, 10).stream()
+                    .filter(e -> e instanceof Projectile)
+                    .forEach(e -> {
+                        Projectile projectile = (Projectile) e;
+                        projectile.setVelocity(projectile.getVelocity().multiply(-1));
+                    });
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家使用图腾事件
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityResurrect(EntityResurrectEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 图腾削弱
+        if (ConfigManager.getCombatConfig().has("totem_nerfed_drop") && 
+            ConfigManager.getCombatConfig().get("totem_nerfed_drop").getAsBoolean()) {
+            if (event.getEntity() instanceof Player player) {
+                // 削弱图腾效果 - 移除再生效果
+                player.removePotionEffect(PotionEffectType.REGENERATION);
+                player.removePotionEffect(PotionEffectType.ABSORPTION);
+                player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家进入村庄事件
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerMoveForVillage(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 进入村庄获得不祥之兆
+        if (ConfigManager.getCombatConfig().has("bad_omen_on_village_enter") && 
+            ConfigManager.getCombatConfig().get("bad_omen_on_village_enter").getAsBoolean()) {
+            if (Math.random() < 0.001) { // 0.1%概率
+                Player player = event.getPlayer();
+                if (player.getLocation().getBlock().getBiome().toString().contains("village")) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 6000, 0, false, false));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听物品使用事件 - 烈焰棒/岩浆桶烧伤
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 腐肉给予更多饥饿值
+        if (event.getItem().getType() == Material.ROTTEN_FLESH) {
+            if (ConfigManager.getItemsConfig().has("rotten_flesh_more_hunger") && 
+                ConfigManager.getItemsConfig().get("rotten_flesh_more_hunger").getAsBoolean()) {
+                event.getPlayer().setFoodLevel(Math.min(20, event.getPlayer().getFoodLevel() + 4));
+            }
+        }
+        
+        // 生食给予饥饿和反胃
+        if (isRawFood(event.getItem().getType())) {
+            if (ConfigManager.getItemsConfig().has("raw_food_hunger_and_nausea") && 
+                ConfigManager.getItemsConfig().get("raw_food_hunger_and_nausea").getAsBoolean()) {
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 0, false, false));
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 200, 0, false, false));
+            }
+        }
+        
+        // 肉类变质
+        if (isMeat(event.getItem().getType())) {
+            if (ConfigManager.getItemsConfig().has("meat_spoil_chance")) {
+                double chance = ConfigManager.getItemsConfig().get("meat_spoil_chance").getAsDouble();
+                if (Math.random() < chance) {
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 1, false, false));
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 0, false, false));
+                }
+            }
+        }
+        
+        // 食物中毒
+        if (ConfigManager.getItemsConfig().has("food_poisoning_chance")) {
+            double chance = ConfigManager.getItemsConfig().get("food_poisoning_chance").getAsDouble();
+            if (Math.random() < chance) {
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 0, false, false));
+            }
+        }
+    }
+    
+    /**
+     * 检查是否是生食
+     */
+    private boolean isRawFood(Material material) {
+        return material == Material.BEEF || material == Material.PORKCHOP || 
+               material == Material.CHICKEN || material == Material.MUTTON ||
+               material == Material.RABBIT || material == Material.COD ||
+               material == Material.SALMON;
+    }
+    
+    /**
+     * 检查是否是肉类
+     */
+    private boolean isMeat(Material material) {
+        return material == Material.COOKED_BEEF || material == Material.COOKED_PORKCHOP ||
+               material == Material.COOKED_CHICKEN || material == Material.COOKED_MUTTON ||
+               material == Material.COOKED_RABBIT || material == Material.COOKED_COD ||
+               material == Material.COOKED_SALMON;
+    }
+    
+    /**
+     * 监听玩家使用物品事件 - 烈焰棒/岩浆桶烧伤
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerInteractForBurn(PlayerInteractEvent event) {
+        if (event.isCancelled()) return;
+        
+        if (event.getItem() == null) return;
+        
+        // 烈焰棒烧伤
+        if (event.getItem().getType() == Material.BLAZE_ROD) {
+            if (ConfigManager.getItemsConfig().has("blaze_rod_burns") && 
+                ConfigManager.getItemsConfig().get("blaze_rod_burns").getAsBoolean()) {
+                event.getPlayer().setFireTicks(60); // 3秒着火
+            }
+        }
+        
+        // 岩浆桶烧伤
+        if (event.getItem().getType() == Material.LAVA_BUCKET) {
+            if (ConfigManager.getItemsConfig().has("lava_bucket_burns") && 
+                ConfigManager.getItemsConfig().get("lava_bucket_burns").getAsBoolean()) {
+                event.getPlayer().setFireTicks(100); // 5秒着火
+            }
+        }
+    }
+    
+    /**
+     * 监听方块放置事件 - 门在水中损坏
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 门在水中损坏
+        if (ConfigManager.isDoorsBreakInWater()) {
+            if (isDoor(event.getBlock().getType())) {
+                // 检查是否在水中
+                if (event.getBlock().getType() == Material.WATER) {
+                    event.getBlock().breakNaturally();
+                }
+            }
+        }
+    }
+    
+    /**
+     * 检查是否是门
+     */
+    private boolean isDoor(Material material) {
+        return material == Material.OAK_DOOR || material == Material.SPRUCE_DOOR ||
+               material == Material.BIRCH_DOOR || material == Material.JUNGLE_DOOR ||
+               material == Material.ACACIA_DOOR || material == Material.DARK_OAK_DOOR ||
+               material == Material.CRIMSON_DOOR || material == Material.WARPED_DOOR ||
+               material == Material.IRON_DOOR;
+    }
+    
+    /**
+     * 监听玩家游泳事件 - 溺水效果
+     */
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerMoveForDrowning(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 溺水效果
+        if (ConfigManager.isDrowningEffects()) {
+            Player player = event.getPlayer();
+            if (player.isUnderWater()) {
+                if (player.getRemainingAir() < player.getMaximumAir() / 2) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 40, 0, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 40, 0, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 40, 0, false, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 40, 0, false, false));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家传送事件 - 传送门损坏
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 传送门损坏
+        if (ConfigManager.isPortalBreakChance()) {
+            if (event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+                if (Math.random() < 0.1) { // 10%概率
+                    // 延迟破坏传送门
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Player player = event.getPlayer();
+                            if (player.isOnline()) {
+                                // 在玩家周围寻找并破坏黑曜石
+                                for (int x = -2; x <= 2; x++) {
+                                    for (int y = -2; y <= 2; y++) {
+                                        for (int z = -2; z <= 2; z++) {
+                                            org.bukkit.block.Block block = player.getLocation().getBlock().getRelative(x, y, z);
+                                            if (block.getType() == Material.OBSIDIAN) {
+                                                if (Math.random() < 0.5) {
+                                                    block.breakNaturally();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }.runTaskLater(this, 20L);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家睡觉事件 - 睡觉跳过部分夜晚
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerBedEnterForSleep(PlayerBedEnterEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 睡觉跳过1/3夜晚
+        if (ConfigManager.isSleepSkipsPartOfNight()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Player player = event.getPlayer();
+                    if (player.isOnline() && player.isSleeping()) {
+                        org.bukkit.World world = player.getWorld();
+                        long currentTime = world.getTime();
+                        long newTime = currentTime + 2400; // 跳过1/3夜晚
+                        world.setTime(newTime);
+                    }
+                }
+            }.runTaskLater(this, 60L); // 3秒后
+        }
+    }
+    
+    /**
+     * 监听实体生成事件 - 猪灵敌对判断
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCreatureSpawnForPiglin(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 猪灵敌对判断 - 使用目标设置
+        if (event.getEntity() instanceof Piglin piglin) {
+            if (ConfigManager.getMobConfig("piglin").has("always_angry_unless_full_gold") && 
+                ConfigManager.getMobConfig("piglin").get("always_angry_unless_full_gold").getAsBoolean()) {
+                // 查找最近的玩家并设置为目标
+                Player nearestPlayer = null;
+                double closestDistance = 16.0;
+                for (Player player : piglin.getWorld().getPlayers()) {
+                    double distance = player.getLocation().distance(piglin.getLocation());
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        nearestPlayer = player;
+                    }
+                }
+                if (nearestPlayer != null) {
+                    piglin.setTarget(nearestPlayer);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 监听玩家装备事件 - 重甲减速
+     */
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerMoveForArmor(PlayerMoveEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 重甲减速
+        if (ConfigManager.isHeavyArmorSlowness()) {
+            Player player = event.getPlayer();
+            int armorCount = 0;
+            
+            if (isHeavyArmor(player.getInventory().getHelmet())) armorCount++;
+            if (isHeavyArmor(player.getInventory().getChestplate())) armorCount++;
+            if (isHeavyArmor(player.getInventory().getLeggings())) armorCount++;
+            if (isHeavyArmor(player.getInventory().getBoots())) armorCount++;
+            
+            if (armorCount > 0) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, armorCount - 1, false, false));
+            }
+        }
+    }
+    
+    /**
+     * 检查是否是重甲
+     */
+    private boolean isHeavyArmor(ItemStack item) {
+        if (item == null) return false;
+        Material material = item.getType();
+        return material == Material.IRON_HELMET || material == Material.IRON_CHESTPLATE ||
+               material == Material.IRON_LEGGINGS || material == Material.IRON_BOOTS ||
+               material == Material.DIAMOND_HELMET || material == Material.DIAMOND_CHESTPLATE ||
+               material == Material.DIAMOND_LEGGINGS || material == Material.DIAMOND_BOOTS ||
+               material == Material.NETHERITE_HELMET || material == Material.NETHERITE_CHESTPLATE ||
+               material == Material.NETHERITE_LEGGINGS || material == Material.NETHERITE_BOOTS;
+    }
+    
+    /**
+     * 监听玩家使用物品事件 - 盾牌耐久度
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerItemDamage(PlayerItemDamageEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 盾牌耐久度消耗加倍
+        if (event.getItem().getType() == Material.SHIELD) {
+            if (ConfigManager.getItemsConfig().has("shield_durability_multiplier")) {
+                double multiplier = ConfigManager.getItemsConfig().get("shield_durability_multiplier").getAsDouble();
+                event.setDamage((int) (event.getDamage() * multiplier));
+            }
+        }
+    }
+    
+    /**
+     * 监听实体伤害事件 - 岩浆伤害
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageForLava(EntityDamageEvent event) {
+        if (event.isCancelled()) return;
+        
+        // 岩浆伤害
+        if (event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+            if (ConfigManager.isLavaHeatDamage()) {
+                if (event.getEntity() instanceof Player player) {
+                    // 额外伤害
+                    player.damage(2.0);
+                    player.setFireTicks(100); // 5秒着火
+                }
+            }
+        }
+        
+        // 仙人掌中毒
+        if (event.getCause() == EntityDamageEvent.DamageCause.CONTACT) {
+            if (event.getEntity() instanceof Player player) {
+                if (ConfigManager.isCactusPoison()) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, 0, false, false));
+                }
+            }
+        }
+    }
 }
