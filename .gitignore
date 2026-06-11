@@ -31,7 +31,7 @@ run/
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
 
-# Logs
+# Logs (已排除logs文件夹)
 logs/
 *.log
 
