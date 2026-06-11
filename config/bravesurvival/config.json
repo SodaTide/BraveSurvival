@@ -6,18 +6,20 @@
       "damage": 5.0,
       "speed": 0.23,
       "follow_range": 64.0,
-      "armor": 0.0,
+      "armor": 3.0,
       "burn_in_daylight": false,
       "enhanced_armor": true,
       "enhanced_enchantments": true,
       "spawn_reinforcements": 0.15,
       "fire_resistance": true,
-      "drowned_always_trident": true
+      "drowned_always_trident": true,
+      "husk_hunger": true
     },
     "creeper": {
       "enabled": true,
       "always_charged": true,
-      "instant_fuse": true,
+      "instant_fuse": false,
+      "fuse_ticks": 20,
       "invisible": true,
       "explosion_radius": 10,
       "speed": 0.3
@@ -25,11 +27,12 @@
     "enderman": {
       "enabled": true,
       "health": 40.0,
-      "damage": 7.0,
-      "speed": 0.3,
+      "damage": 14.0,
+      "speed": 0.75,
       "follow_range": 64.0,
       "teleport_after_hit": true,
-      "destroy_blocks": true
+      "destroy_blocks": true,
+      "spawn_endermites_on_death": true
     },
     "skeleton": {
       "enabled": true,
@@ -44,27 +47,28 @@
     "spider": {
       "enabled": true,
       "invisible": true,
-      "speed": 0.4,
+      "speed": 0.5,
       "poison_on_hit": true
     },
     "piglin": {
       "enabled": true,
       "health": 16.0,
-      "damage": 5.0,
+      "damage": 9.0,
       "speed": 0.3,
       "always_angry_unless_full_gold": true
     },
     "phantom": {
       "enabled": true,
       "burn_in_daylight": false,
-      "damage": 6.0
+      "damage": 9.0
     },
     "guardian": {
       "enabled": true,
       "health": 30.0,
       "damage": 6.0,
       "speed": 0.5,
-      "follow_range": 16.0
+      "follow_range": 16.0,
+      "spawn_with_fish": true
     },
     "hoglin": {
       "enabled": true,
@@ -77,20 +81,24 @@
       "enabled": true,
       "attack_players": true,
       "increased_health": true,
-      "jump_explosion": true
+      "health_value": 200.0,
+      "jump_explosion": true,
+      "smash_attack": true,
+      "smash_chance": 0.015
     },
     "blaze": {
       "enabled": true,
-      "fly_only": true,
-      "increased_speed": true,
+      "no_gravity": true,
+      "speed": 0.4,
       "fire_trail": true,
-      "fireballs_spread_fire": true
+      "fire_resistance": true
     },
     "ghast": {
       "enabled": true,
       "spawn_in_triples": true,
       "invisible": true,
-      "larger_explosions": true
+      "larger_explosions": true,
+      "explosion_power": 6
     },
     "pillager": {
       "enabled": true,
@@ -113,8 +121,11 @@
     },
     "wither_skeleton": {
       "enabled": true,
+      "health": 30.0,
+      "damage": 5.0,
       "wither_effect": true,
-      "destroy_blocks_near_skulls": true
+      "destroy_blocks_near_skulls": true,
+      "stone_sword_and_pickaxe": true
     },
     "silverfish": {
       "enabled": true,
@@ -128,10 +139,64 @@
       "speed": 0.4,
       "spawn_from_end_stone": true,
       "spawn_from_dead_endermen": true
+    },
+    "bee": {
+      "enabled": true,
+      "hostile_range": 16.0,
+      "sting_poison_duration": 200,
+      "sting_weakness_duration": 600
+    },
+    "wolf": {
+      "enabled": true,
+      "hostile_range": 16.0
+    },
+    "polar_bear": {
+      "enabled": true,
+      "hostile_range": 16.0
+    },
+    "zombified_piglin": {
+      "enabled": true,
+      "hostile_range": 32.0
+    },
+    "chicken": {
+      "enabled": true,
+      "turn_into_jockey": true,
+      "transform_range": 8.0
+    },
+    "pig": {
+      "enabled": true,
+      "turn_into_hoglin": true,
+      "transform_range": 8.0
+    },
+    "cow": {
+      "enabled": true,
+      "turn_into_rabbit": true,
+      "transform_range": 8.0
+    },
+    "sheep": {
+      "enabled": true,
+      "turn_into_rabbit": true,
+      "transform_range": 8.0
+    },
+    "dolphin": {
+      "enabled": true,
+      "turn_into_cod": true,
+      "transform_range": 10.0
+    },
+    "fish": {
+      "enabled": true,
+      "turn_into_guardian": true,
+      "transform_chance": 0.33,
+      "transform_range": 16.0
+    },
+    "rabbit": {
+      "enabled": true,
+      "replace_cows_and_sheep": true
     }
   },
   "player": {
     "fall_damage_debuff": true,
+    "progressive_fall_damage": true,
     "weakness_duration": 10,
     "slowness_duration": 10,
     "no_natural_regeneration": true,
@@ -140,7 +205,17 @@
     "starving_faster": true,
     "heavy_armor_slowness": true,
     "drop_items_on_hit": true,
-    "drop_items_on_move": true
+    "drop_items_on_hit_chance": 0.5,
+    "drop_items_on_hit_count": 4,
+    "drop_items_on_move": true,
+    "drop_items_on_move_chance": 0.00083,
+    "death_spawn_zombie": true,
+    "death_spawn_zombie_chance": 0.5,
+    "death_spawn_zombie_leather_helmet": true,
+    "fire_trail_on_fire": true,
+    "fire_trail_weakness": true,
+    "obsidian_hunger_level": 255,
+    "boat_hunger_level": 3
   },
   "world": {
     "spawn_multiplier": 8,
@@ -151,13 +226,20 @@
     "reduced_debug_info": true,
     "random_mob_noises_in_dark": true,
     "lava_heat_damage": true,
+    "lava_heat_range": 1,
     "cactus_poison": true,
     "doors_break_in_water": true,
     "drowning_effects": true,
+    "progressive_drowning": true,
     "sleep_skips_third_of_night": true,
     "wake_up_to_phantoms": true,
+    "phantom_spawn_chance_per_phantom": 0.5,
+    "phantom_max_count": 4,
     "random_lightning_storms": true,
-    "portal_break_chance": true
+    "lightning_storm_chance": 0.000033,
+    "portal_break_chance": true,
+    "portal_break_chance_value": 0.5,
+    "cauldron_dries_in_nether": true
   },
   "blocks": {
     "silverfish_chance": 0.0625,
@@ -174,15 +256,25 @@
     "ore_drop_chance": 0.5,
     "hay_block_no_drop_without_silk_touch": true,
     "tnt_break_explodes_chance": 0.1,
+    "tnt_item_explode_chance": 0.1,
+    "tnt_item_fuse_ticks": 80,
     "obsidian_heavy_hunger": true,
-    "infested_stone_spawns_evoker_fangs": true
+    "infested_stone_spawns_evoker_fangs": true,
+    "magma_bubble_streams_more_powerful": true
   },
   "items": {
     "shield_durability_multiplier": 3.0,
+    "shield_durability_per_block": 66.7,
     "blaze_rod_burns": true,
+    "blaze_rod_burn_chance": 0.1,
     "blaze_powder_burns": true,
+    "blaze_powder_burn_chance": 0.05,
     "lava_bucket_burns": true,
+    "lava_bucket_burn_chance": 0.2,
+    "buckets_leak": true,
+    "bucket_leak_chance": 0.1,
     "rotten_flesh_more_hunger": true,
+    "rotten_flesh_hunger_restore": 4,
     "raw_food_hunger_and_nausea": true,
     "meat_spoil_chance": 0.0166,
     "food_poisoning_chance": 0.0166
@@ -190,7 +282,9 @@
   "boat": {
     "sink_after_ticks": 600,
     "sink_speed_multiplier": 0.05,
-    "hunger_from_rowing": true
+    "hunger_from_rowing": true,
+    "hunger_level": 3,
+    "hunger_chance": 0.05
   },
   "recipes": {
     "planks_per_log": 2,
@@ -198,21 +292,59 @@
     "golden_carrot_requires_ingots": true,
     "glistering_melon_requires_ingots": true,
     "ores_double_time_in_furnace": true,
-    "ores_normal_time_in_blast_furnace": true
+    "ores_normal_time_in_blast_furnace": true,
+    "hay_block_to_wheat": 4
   },
   "combat": {
-    "arrows_misfire_chance": 0.1,
+    "arrows_misfire_chance": 0.2,
     "ender_pearls_always_spawn_endermites": true,
     "ender_crystals_reflect_projectiles": true,
+    "ender_crystals_reflect_range": 5.0,
     "totem_nerfed_drop": true,
     "totem_nerfed_regeneration": true,
-    "bad_omen_on_village_enter": true
+    "bad_omen_on_village_enter": true,
+    "bad_omen_chance": 0.33,
+    "potion_side_effects": true,
+    "potion_side_effects_chance": 0.5,
+    "explosion_radiation_in_end": true,
+    "explosion_radiation_range": 10.0,
+    "shield_deflect_arrows": true,
+    "enderman_block_break_on_teleport": true
   },
   "structures": {
     "desert_temple_husks": true,
+    "desert_temple_husk_count": 12,
     "ruined_portal_illusioners": true,
+    "ruined_portal_illusioner_count": 4,
     "jungle_temple_illusioners": true,
     "shipwrecks_guarded_by_drowned": true,
+    "shipwreck_drowned_count": 8,
     "buried_treasure_guarded_by_vexes": true
+  },
+  "villager": {
+    "trades_more_expensive": true,
+    "trade_multiplier": 2.0,
+    "nerfed_bartering_loot": true
+  },
+  "ender_dragon": {
+    "enabled": true,
+    "regen_chance_per_tick": 0.01,
+    "regen_amount": 1.0,
+    "breath_cloud_radius": 4.0,
+    "breath_cloud_duration": 400
+  },
+  "wandering_trader": {
+    "replace_with_pillagers": true,
+    "replace_with_ravager": true
+  },
+  "plugin_unique": {
+    "iron_golem_attack_players": true,
+    "iron_golem_jump_explosion": true,
+    "iron_golem_smash_attack": true,
+    "blaze_no_gravity": true,
+    "blaze_speed": 0.4,
+    "ghast_triple_spawn": true,
+    "trader_llama_to_pillager": true,
+    "rotten_flesh_extra_hunger": true
   }
 }

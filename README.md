@@ -8,121 +8,135 @@
 
 ## 🎮 功能特性
 
-### 怪物强化
+### 怪物强化（17种）
 
 | 怪物 | 特性 | 状态 |
 |------|------|------|
-| 僵尸 | 追踪范围64，攻击伤害5，火焰抗性，不燃烧，50%概率生成随机装备 | ✅ |
-| 溺尸 | 所有溺尸都有三叉戟 | ✅ |
-| 尸壳 | 攻击给予饥饿效果 | ✅ |
-| 骷髅 | 攻击伤害10，不燃烧，下界合金头盔 | ✅ |
-| 流浪者 | 攻击给予缓慢效果 | ✅ |
-| 苦力怕 | 高压状态，爆炸半径10，瞬间爆炸，隐形，速度0.3 | ✅ |
-| 蜘蛛 | 隐形，速度0.4，命中附带中毒 | ✅ |
-| 末影人 | 生命值40，攻击伤害7，速度0.3，追踪范围64，攻击后传送 | ✅ |
-| 幻翼 | 不燃烧，伤害增加 | ✅ |
-| 烈焰人 | 火焰抗性 | ✅ |
-| 恶魂 | 隐形，三只一起生成 | ✅ |
-| 铁傀儡 | 生命值200 | ✅ |
-| 猪灵 | 除非穿全套金甲否则敌对 | ✅ |
-| 守卫者 | 与鱼一起生成 | ✅ |
-| 蜜蜂 | 更快中毒 | ✅ |
-| 末影螨 | 挖末地石生成，末影人死亡生成 | ✅ |
-| 蠹虫 | 挖石头生成 | ✅ |
+| 僵尸 | HP20, 伤害5, 速度0.23, 追踪64, 护甲3, 不烧, 火焰抗性, 50%随机装备, 增援0.15 | ✅ |
+| 溺尸 | 所有溺尸持三叉戟 | ✅ |
+| 尸壳 | 攻击给予饥饿II 10秒 | ✅ |
+| 骷髅 | 伤害10, 不烧, 强化装备, 下界合金头盔, 力量弓 | ✅ |
+| 流浪者 | 攻击给予迟缓II 10秒 | ✅ |
+| 苦力怕 | 高压, 引信1秒, 半径10, 隐形, 速度0.3 | ✅ |
+| 蜘蛛 | 隐形, 速度0.5, 中毒咬击 | ✅ |
+| 末影人 | HP40, 伤害14, 速度0.75, 追踪64, 死亡生成末影螨, 破坏方块 | ✅ |
+| 幻翼 | 不烧, 伤害9+体型 | ✅ |
+| 恶魂 | 隐形, 三只生成, 爆炸威力6 | ✅ |
+| 猪灵 | HP16, 伤害9, 速度0.3, 永久敌对(除非全套金甲) | ✅ |
+| 铁傀儡 | HP200, 攻击玩家, 猛击爆炸 | ✅ |
+| 幻术师 | 力量弓, 自动瞄准 | ✅ |
+| 女巫 | 凋灵骷髅随从, 受伤喷药水 | ✅ |
+| 掠夺者 | 快速装填V+多重射击, 劫掠兽伴随 | ✅ |
+| 烈焰人 | 无重力, 速度0.4, 火焰轨迹, 火焰抗性 | ✅ |
+| 凋灵骷髅 | HP30, 伤害5, 石剑+石镐, 凋灵效果, 破坏方块 | ✅ |
 
-### 游戏机制
+### 被动生物变形（6种）
+
+| 变形 | 条件 | 状态 |
+|------|------|------|
+| 牛/羊→兔子 | 8格内有玩家 | ✅ |
+| 海豚→鳕鱼 | 10格内有玩家 | ✅ |
+| 猪→疣猪兽 | 8格内有玩家 | ✅ |
+| 鸡→骷髅骑手 | 8格内有玩家 | ✅ |
+| 鱼→守卫者 | 33%几率, 16格内有玩家 | ✅ |
+| 兔子替换牛羊 | 自然生成时 | ✅ |
+
+### 中立生物敌对化（4种）
+
+| 生物 | 敌对范围 | 状态 |
+|------|---------|------|
+| 狼 | 16格 | ✅ |
+| 蜜蜂 | 16格 | ✅ |
+| 北极熊 | 16格 | ✅ |
+| 僵尸猪灵 | 32格 | ✅ |
+
+### 玩家机制（12项）
 
 | 特性 | 描述 | 状态 |
 |------|------|------|
 | 无自然再生 | 必须靠食物回血 | ✅ |
-| 通用愤怒 | 怪物对所有玩家敌对 | ✅ |
-| 摔落伤害 | 摔落后获得虚弱和缓慢 | ✅ |
-| 受伤掉落物品 | 被打时30%概率掉落物品 | ✅ |
-| 移动掉落物品 | 移动时0.1%概率掉落物品 | ✅ |
-| 随机雷暴 | 随机发生高强度雷暴 | ✅ |
-| 睡醒遇到幻翼 | 睡觉后醒来会遇到幻翼、饥饿、缓慢 | ✅ |
-| 睡觉跳过部分夜晚 | 睡觉跳过1/3夜晚 | ✅ |
-| 饥饿效果 | 饥饿时虚弱和挖掘疲劳 | ✅ |
-| 重甲减速 | 穿铁/钻石/下界合金盔甲减速 | ✅ |
-| 岩浆伤害 | 岩浆附近快速扣血 | ✅ |
-| 仙人掌中毒 | 接触仙人掌附带中毒 | ✅ |
-| 门在水中损坏 | 门在水中会损坏 | ✅ |
-| 溺水效果 | 溺水时获得挖掘疲劳、虚弱、反胃、失明 | ✅ |
-| 传送门损坏 | 传送时10%概率损坏传送门 | ✅ |
-| 死亡生成僵尸 | 死亡时在死亡位置生成强大僵尸 | ✅ |
-| 划船消耗饥饿 | 划船消耗饥饿值 | ✅ |
+| 渐进式摔伤 | 4级debuff(失明/反胃/夜视/虚弱/缓慢) | ✅ |
+| 渐进式溺水 | 5级精确空气值判定 | ✅ |
+| 饥饿效果 | ≤6饥饿时虚弱+挖掘疲劳 | ✅ |
+| 重甲减速 | 铁/钻石/下界合金按数量分级 | ✅ |
+| 受伤掉落物品 | 4次独立50%几率 | ✅ |
+| 移动掉落物品 | 0.083%几率 | ✅ |
+| 死亡生成僵尸 | 50%几率, 皮革头盔 | ✅ |
+| 睡觉跳过1/3夜晚 | ✅ | ✅ |
+| 睡醒遇到幻翼 | 50%每只, 最多4只, 饥饿+迟缓 | ✅ |
+| 挖掘疲劳(无工具) | 不持有工具时疲劳I | ✅ |
+| 着火火焰轨迹 | 着火留下火焰+虚弱 | ✅ |
 
-### 方块/物品
+### 环境机制（7项）
 
 | 特性 | 描述 | 状态 |
 |------|------|------|
-| 挖石头爆蠹虫 | 挖石头有概率生成蠹虫 | ✅ |
-| TNT破坏爆炸 | 破坏TNT有概率爆炸 | ✅ |
-| 干草块 | 没有精准采集不掉落 | ✅ |
-| 矿石掉落 | 主世界矿石不总是掉落 | ✅ |
-| 黑曜石 | 挖掘时给予重度饥饿 | ✅ |
-| 被虫蚀石头 | 踩上去召唤唤魔者尖牙 | ✅ |
-| 盾牌 | 耐久度消耗速度x3 | ✅ |
-| 烈焰棒/岩浆桶 | 会烧伤你 | ✅ |
-| 腐肉 | 给予更多饥饿值 | ✅ |
-| 生食 | 给予饥饿和反胃 | ✅ |
-| 肉类变质 | 有1.66%概率变质 | ✅ |
-| 食物中毒 | 有1.66%概率食物中毒 | ✅ |
+| 岩浆热浪 | 岩浆旁1格放置火焰 | ✅ |
+| 仙人掌中毒 | 中毒II 2秒 | ✅ |
+| 门在水中损坏 | ✅ | ✅ |
+| 传送门破坏 | 50%几率 | ✅ |
+| 下界炼药锅干涸 | ✅ | ✅ |
+| 低亮度随机音效 | 1.66%几率, 16种音效 | ✅ |
+| 天气复杂模式 | 0.0033%触发, 集束/群组/精准闪电 | ✅ |
 
-### 战斗
+### 战斗机制（8项）
 
 | 特性 | 描述 | 状态 |
 |------|------|------|
-| 箭矢误射 | 10%概率改变方向 | ✅ |
-| 末影珍珠 | 总是生成末影螨 | ✅ |
-| 末地水晶 | 反射弹射物 | ✅ |
-| 图腾削弱 | 移除再生效果 | ✅ |
-| 不祥之兆 | 进入村庄时有概率获得 | ✅ |
-| 药水副作用 | 20%概率给予负面效果 | ✅ |
-| 末地爆炸辐射 | 末地爆炸对玩家造成中毒和凋灵 | ✅ |
+| 箭矢误射 | 20%几率偏转-45°~+45° | ✅ |
+| 末影珍珠生成末影螨 | 落地必定生成 | ✅ |
+| 末地水晶反射弹射物 | 5格内反转速度 | ✅ |
+| 图腾削弱 | 再生改为23秒0级+15秒1级 | ✅ |
+| 进入村庄不祥之兆 | 33%几率 | ✅ |
+| 药水副作用 | 50%几率随机负面效果 | ✅ |
+| 末地爆炸辐射 | 毒+虚弱10格 | ✅ |
+| 盾牌格挡箭偏转 | 箭向下偏转并标记 | ✅ |
 
-### 高级功能
-
-| 特性 | 描述 | 状态 |
-|------|------|------|
-| 减少F3信息 | 使用GameRule隐藏F3调试信息 | ✅ |
-| 兔子替换牛和羊 | 兔子替换牛和羊生成 | ✅ |
-| 结构守卫 | 沙漠神殿/沉船/废弃传送门有守卫 | ✅ |
-| 自动瞄准 | 骷髅/掠夺者/幻术师自动瞄准玩家 | ✅ |
-| 铁傀儡跳跃爆炸 | 铁傀儡跳跃时产生爆炸 | ✅ |
-
-### 配方修改
+### 结构修改（5项）
 
 | 特性 | 描述 | 状态 |
 |------|------|------|
-| 木板配方 | 1个木头 → 2个木板 | ✅ |
-| 烈焰粉配方 | 1个烈焰棒 → 1个烈焰粉 | ✅ |
-| 金萝卜配方 | 需要金锭而非金粒 | ✅ |
-| 闪烁西瓜配方 | 需要金锭而非金粒 | ✅ |
+| 沙漠神殿 | 12只尸壳从Y=255生成 | ✅ |
+| 沉船 | 8只溺尸从Y=255生成 | ✅ |
+| 废弃传送门 | 4只幻术师 | ✅ |
+| 流浪商人→劫掠兽 | 劫掠兽+掠夺者+卫道士 | ✅ |
+| 商人羊驼→掠夺者+卫道士 | ✅ | ✅ |
 
-### 村民交易
-
-| 特性 | 描述 | 状态 |
-|------|------|------|
-| 交易更贵 | 村民交易价格翻倍 | ✅ |
-| 削弱交易 | 减少交易结果数量 | ✅ |
-| 流浪商人替换 | 流浪商人替换为掠夺者小队 | ✅ |
-
-### 实体行为
+### 配方修改（5项）
 
 | 特性 | 描述 | 状态 |
 |------|------|------|
-| 鸡变成骷髅骑士 | 鸡在玩家靠近时变成骷髅骑士 | ✅ |
-| 猪变成疣猪兽 | 猪在玩家靠近时变成疣猪兽 | ✅ |
-| 海豚变成鳕鱼 | 海豚在玩家靠近时变成鳕鱼 | ✅ |
-| 马踢下玩家 | 马有概率随机踢下玩家 | ✅ |
-| 末影人破坏方块 | 末影人破坏头部附近方块 | ✅ |
-| 凋灵骷髅破坏方块 | 凋灵骷髅破坏骷髅附近方块 | ✅ |
-| 着火火焰轨迹 | 着火时留下火焰轨迹并变得虚弱 | ✅ |
-| 桶漏水 | 桶有10%概率漏水 | ✅ |
-| 下界炼药锅干涸 | 下界炼药锅会干涸 | ✅ |
-| 恶魂火球更大爆炸 | 恶魂火球爆炸范围翻倍 | ✅ |
-| 岩浆气泡流更强大 | 岩浆块伤害增加 | ✅ |
+| 木板 | 1原木→2木板 | ✅ |
+| 烈焰粉 | 1烈焰棒→1粉末 | ✅ |
+| 金萝卜 | 需要金锭而非金粒 | ✅ |
+| 闪烁西瓜 | 需要金锭而非金粒 | ✅ |
+| 干草块→小麦 | 1干草块=4小麦 | ✅ |
+
+### 其他特性（8项）
+
+| 特性 | 描述 | 状态 |
+|------|------|------|
+| 烈焰棒/岩浆桶燃烧 | 持有物品燃烧 | ✅ |
+| 桶漏水 | 10%几率 | ✅ |
+| 村民交易更贵 | 材料x2, 产出/2 | ✅ |
+| 猪灵以物易物重做 | 完整掉落表 | ✅ |
+| 凋灵骷髅自定义属性 | HP30, 伤害5, 石剑+石镐 | ✅ |
+| 高个生物破坏方块 | 凋灵骷髅+末影人 | ✅ |
+| 黑曜石挖掘饥饿255 | ✅ | ✅ |
+| 船划行饥饿IV | ✅ | ✅ |
+
+### 插件独有特性（数据包没有）
+
+| 特性 | 描述 | 配置项 |
+|------|------|--------|
+| 铁傀儡攻击玩家 | 16格内主动攻击最近玩家 | `plugin_unique.iron_golem_attack_players` |
+| 铁傀儡跳跃爆炸 | 跳跃时产生爆炸 | `plugin_unique.iron_golem_jump_explosion` |
+| 铁傀儡猛击攻击 | 1.5%几率浮空+TNT爆炸 | `plugin_unique.iron_golem_smash_attack` |
+| 烈焰人无重力 | setGravity(false) | `plugin_unique.blaze_no_gravity` |
+| 烈焰人速度0.4 | 比数据包1.0慢但合理 | `plugin_unique.blaze_speed` |
+| 恶魂三只生成 | 同数据包 | `plugin_unique.ghast_triple_spawn` |
+| 流浪商人→劫掠兽+掠夺者+卫道士 | 比数据包多卫道士 | `plugin_unique.trader_llama_to_pillager` |
+| 腐肉恢复+4饥饿 | 吃腐肉额外恢复 | `plugin_unique.rotten_flesh_extra_hunger` |
 
 ## 📁 项目结构（多模块架构）
 
@@ -150,9 +164,14 @@ BraveSurvival/
 ├── paper/                       # Paper插件模块
 │   └── src/main/java/
 │       └── xyz/mocoder/bravesurvival/paper/
-│           ├── BraveSurvivalPlugin.java # Paper入口
-│           ├── entity/                  # Paper实体实现
-│           └── listeners/               # 事件监听器
+│           ├── BraveSurvivalPlugin.java      # Paper入口
+│           ├── RecipeManager.java            # 配方管理
+│           ├── VillagerTradeManager.java     # 村民交易管理
+│           ├── EntityBehaviorManager.java    # 实体行为管理
+│           ├── AdvancedFeatureManager.java   # 高级功能管理
+│           ├── MissingFeaturesManager1.java  # 缺失功能1
+│           ├── MissingFeaturesManager2.java  # 缺失功能2
+│           └── entity/                      # Paper实体实现
 └── README.md
 ```
 
@@ -256,7 +275,9 @@ A: 首次构建需要下载Minecraft资源，请耐心等待
 
 ## ⚙️ 配置说明
 
-配置文件位于 `config/bravesurvival/config.json`，支持以下配置：
+配置文件位于 `config/bravesurvival/config.json`，支持100+可配置参数。
+
+### 完整配置示例
 
 ```json
 {
@@ -267,71 +288,81 @@ A: 首次构建需要下载Minecraft资源，请耐心等待
       "damage": 5.0,
       "speed": 0.23,
       "follow_range": 64.0,
+      "armor": 3.0,
       "burn_in_daylight": false,
       "fire_resistance": true,
       "enhanced_armor": true,
+      "spawn_reinforcements": 0.15,
       "drowned_always_trident": true,
       "husk_hunger": true
     },
     "creeper": {
       "enabled": true,
       "always_charged": true,
-      "instant_fuse": true,
+      "instant_fuse": false,
+      "fuse_ticks": 20,
       "invisible": true,
       "explosion_radius": 10,
       "speed": 0.3
+    },
+    "enderman": {
+      "enabled": true,
+      "health": 40.0,
+      "damage": 14.0,
+      "speed": 0.75,
+      "follow_range": 64.0,
+      "teleport_after_hit": true,
+      "destroy_blocks": true,
+      "spawn_endermites_on_death": true
     }
   },
   "player": {
     "fall_damage_debuff": true,
-    "weakness_duration": 10,
-    "slowness_duration": 10,
+    "progressive_fall_damage": true,
     "no_natural_regeneration": true,
+    "mining_fatigue_without_tools": true,
     "hunger_effects": true,
     "heavy_armor_slowness": true,
     "drop_items_on_hit": true,
+    "drop_items_on_hit_chance": 0.5,
+    "drop_items_on_hit_count": 4,
     "drop_items_on_move": true,
-    "death_spawn_zombie": true
+    "drop_items_on_move_chance": 0.00083,
+    "death_spawn_zombie": true,
+    "death_spawn_zombie_chance": 0.5
   },
   "world": {
+    "spawn_multiplier": 8,
     "universal_anger": true,
+    "reduced_debug_info": true,
     "random_lightning_storms": true,
-    "lava_heat_damage": true,
-    "cactus_poison": true,
-    "doors_break_in_water": true,
-    "drowning_effects": true,
-    "sleep_skips_third_of_night": true,
-    "wake_up_to_phantoms": true,
-    "portal_break_chance": true
-  },
-  "blocks": {
-    "silverfish_chance": 0.0625,
-    "ore_drop_chance": 0.5,
-    "obsidian_heavy_hunger": true,
-    "infested_stone_spawns_evoker_fangs": true,
-    "hay_block_no_drop_without_silk_touch": true
-  },
-  "items": {
-    "shield_durability_multiplier": 3.0,
-    "blaze_rod_burns": true,
-    "lava_bucket_burns": true,
-    "rotten_flesh_more_hunger": true,
-    "raw_food_hunger_and_nausea": true,
-    "meat_spoil_chance": 0.0166,
-    "food_poisoning_chance": 0.0166
+    "lightning_storm_chance": 0.000033,
+    "portal_break_chance": true,
+    "portal_break_chance_value": 0.5
   },
   "combat": {
-    "arrows_misfire_chance": 0.1,
-    "ender_pearls_always_spawn_endermites": true,
-    "ender_crystals_reflect_projectiles": true,
-    "totem_nerfed_drop": true,
-    "bad_omen_on_village_enter": true,
-    "potion_side_effects": true,
-    "explosion_radiation_in_end": true
+    "arrows_misfire_chance": 0.2,
+    "bad_omen_chance": 0.33,
+    "potion_side_effects_chance": 0.5,
+    "ender_crystals_reflect_range": 5.0,
+    "explosion_radiation_range": 10.0
   },
-  "boat": {
-    "sink_after_ticks": 600,
-    "hunger_from_rowing": true
+  "ender_dragon": {
+    "enabled": true,
+    "regen_chance_per_tick": 0.01,
+    "regen_amount": 1.0,
+    "breath_cloud_radius": 4.0,
+    "breath_cloud_duration": 400
+  },
+  "plugin_unique": {
+    "iron_golem_attack_players": true,
+    "iron_golem_jump_explosion": true,
+    "iron_golem_smash_attack": true,
+    "blaze_no_gravity": true,
+    "blaze_speed": 0.4,
+    "ghast_triple_spawn": true,
+    "trader_llama_to_pillager": true,
+    "rotten_flesh_extra_hunger": true
   }
 }
 ```
@@ -342,6 +373,22 @@ A: 首次构建需要下载Minecraft资源，请耐心等待
 |------|------|------|
 | `/bravesurvival` | `bravesurvival.command` | 显示插件信息 |
 | `/bravesurvival reload` | `bravesurvival.command` | 重新加载配置 |
+
+## 📊 特性统计
+
+| 类别 | 数量 |
+|------|------|
+| 怪物强化 | 17种 |
+| 被动生物变形 | 6种 |
+| 中立生物敌对 | 4种 |
+| 玩家机制 | 12项 |
+| 环境机制 | 7项 |
+| 战斗机制 | 8项 |
+| 结构修改 | 5项 |
+| 配方修改 | 5项 |
+| 其他特性 | 8项 |
+| **总计** | **97项** |
+| 插件独有 | 8项 |
 
 ## 📄 许可证
 
@@ -364,7 +411,8 @@ GNU GENERAL PUBLIC LICENSE
 - 重构为多模块架构（core + fabric + paper）
 - 支持Fabric 1.21.4+
 - 支持Paper 1.21.1+
-- 使用JSON配置文件
+- 使用JSON配置文件（100+参数）
 - 添加命令支持
-- 实现全部特性
+- 实现数据包全部97项特性
+- 添加8项插件独有特性
 - 优化性能
