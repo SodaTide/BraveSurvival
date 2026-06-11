@@ -398,12 +398,14 @@ GNU GENERAL PUBLIC LICENSE
 
 ## 👥 作者
 
-- **程序**：MCMocoder
-- **特别感谢**：Zi__Min
+- **原作者**：[MCMocoder](https://github.com/MCMocoder) - 原始项目开发者
+- **改进者**：SodaTide - 多模块重构、Paper插件实现
+- **特别感谢**：Zi__Min、vibe coding 与 AI 的支持
 
 ## 🔗 相关链接
 
-- [GitHub仓库](https://github.com/EinsteinZheng/BraveSurvival)
+- [原始项目（MCMocoder/BraveSurvival）](https://github.com/MCMocoder/BraveSurvival) - 本项目基于此改进而来
+- [Fork仓库（SodaTide/BraveSurvival）](https://github.com/SodaTide/BraveSurvival)
 - [Fabric官网](https://fabricmc.net/)
 - [PaperMC官网](https://papermc.io/)
 
